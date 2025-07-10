@@ -1,0 +1,6 @@
+dist
+node_modules
+.env
+docker-compose.yaml
+mysql_data
+postgres_data
