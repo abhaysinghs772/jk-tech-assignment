@@ -11,6 +11,7 @@ import { UserService } from 'src/default/user/user.service';
 import { encryption } from 'src/default/common/constants/encryption.option';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserRoles } from './dto/register-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -81,7 +82,46 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  /*
+  async register(registerUserBody: {
+    name: string;
+    email: string;
+    password: string;
+    userRole: UserRoles;
+  }) {
+    const { name, email, password, userRole } = registerUserBody;
+
+    // Check if admin already exists
+    const existingAdmin = await this.userService.findByEmail(email);
+
+    if (existingAdmin) {
+      throw new ConflictException('user with this email already exists.');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save admin
+    const user = new UserEntity();
+    user.name = name;
+    user.email = email;
+    user.password = hashedPassword;
+    user.roles = userRole;
+    const registerUser = await this.userService.create(user);
+
+    return registerUser;
+  }
+
+  // Generate JWT token and refresh token
+  async login(loginUserBody: LoginUserDto) {
+    const { email, password } = loginUserBody;
+
+    // validate user
+    const user = await this.validateUser(email, password);
+
+    // return access_token and refresh_token
+    return this.generateTokens(user);
+  }
+
   async refreshTokens(
     jwtToken: string,
     refreshToken: string,
@@ -127,40 +167,5 @@ export class AuthService {
     } catch (err) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-  }
-  */
-
-  async register(registerUserBody: {
-    name: string;
-    email: string;
-    password: string;
-    userRole: UserRoles;
-  }) {
-    const { name, email, password, userRole } = registerUserBody;
-
-    // Check if admin already exists
-    const existingAdmin = await this.userService.findByEmail(email);
-
-    if (existingAdmin) {
-      throw new ConflictException('user with this email already exists.');
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and save admin
-    const user = new UserEntity();
-    user.name = name;
-    user.email = email;
-    user.password = hashedPassword;
-    user.roles = userRole;
-    const registerUser = await this.userService.create(user);
-
-    return registerUser;
-  }
-
-  // Generate JWT token
-  async login(user: any) {
-    return this.generateTokens(user);
   }
 }
