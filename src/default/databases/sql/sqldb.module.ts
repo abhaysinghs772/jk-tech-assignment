@@ -1,3 +1,5 @@
+// src/default/databases/sql/sqldb.module.ts
+
 import { Module, Global, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { sqlDbConfig } from './sqldb.config';

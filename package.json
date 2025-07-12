@@ -1,5 +1,5 @@
 {
-  "name": "sample-app",
+  "name": "jk-tech-assignment",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -18,7 +18,17 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    
+    "mig:gen": "npx ts-node node_modules/.bin/typeorm migration:generate src/default/migrations/inital-migration -d ./src/data-source.ts",
+    "mig:run": "npx ts-node node_modules/.bin/typeorm migration:run -d ./src/data-source.ts",
+    "mig:create": "npx ts-node node_modules/.bin/typeorm migration:create src/migrations/test-timestamps-OtpDetailsEntity",
+    "mig:revert": "npx ts-node node_modules/.bin/typeorm migration:revert -d ./src/data-source.ts",
+
+    "mig:gen:win": "npx ts-node ./node_modules/typeorm/cli.js migration:generate src/default/migrations/inital-migration -d ./src/data-source.ts",
+    "mig:run:win": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
+    "mig:create:win": "npx ts-node ./node_modules/typeorm/cli.js migration:create src/default/migrations/inital-migration",
+    "mig:revert:win": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.714.0",
