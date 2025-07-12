@@ -1,28 +1,29 @@
 import {
   Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Patch,
-  Delete,
-  NotFoundException,
-  ParseUUIDPipe,
-  UseGuards,
-  UseInterceptors,
+  // Get,
+  // Post,
+  // Body,
+  // Param,
+  // Patch,
+  // Delete,
+  // NotFoundException,
+  // ParseUUIDPipe,
+  // UseGuards,
+  // UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from 'src/default/auth/guards/jwt-auth.guard';
-import { NoCache } from 'src/default/cache/cache.decorator';
-import { IdempotencyInterceptor } from '../common/interceptors/idempotency.interceptor';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { UpdateUserDto } from './dto/update-user.dto';
+// import { JwtAuthGuard } from 'src/default/auth/guards/jwt-auth.guard';
+// import { NoCache } from 'src/default/cache/cache.decorator';
+// import { IdempotencyInterceptor } from '../common/interceptors/idempotency.interceptor';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  /*
   @NoCache()
   @UseInterceptors(IdempotencyInterceptor)
   @Post()
@@ -62,4 +63,5 @@ export class UserController {
   async delete(@Param('id') id: string): Promise<void> {
     return this.userService.delete(id);
   }
+  */
 }

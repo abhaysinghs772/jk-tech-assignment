@@ -10,6 +10,7 @@ import { AppConfigService } from 'src/default/config/config.service';
 import { UserService } from 'src/default/user/user.service';
 import { encryption } from 'src/default/common/constants/encryption.option';
 import { UserEntity } from '../user/entities/user.entity';
+import { UserRoles } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -80,6 +81,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  /*
   async refreshTokens(
     jwtToken: string,
     refreshToken: string,
@@ -126,35 +128,35 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
+  */
 
-  async registerAdmin(body: any) {
-    const { name, email, password } = body;
+  async register(registerUserBody: {
+    name: string;
+    email: string;
+    password: string;
+    userRole: UserRoles;
+  }) {
+    const { name, email, password, userRole } = registerUserBody;
 
     // Check if admin already exists
     const existingAdmin = await this.userService.findByEmail(email);
 
     if (existingAdmin) {
-      throw new ConflictException('An admin with this email already exists.');
+      throw new ConflictException('user with this email already exists.');
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save admin
-    const admin = new UserEntity();
-    admin.name = name;
-    admin.email = email;
-    admin.password = hashedPassword;
-    admin.roles = ['admin'];
-    const createdAdmin = await this.userService.create(admin);
+    const user = new UserEntity();
+    user.name = name;
+    user.email = email;
+    user.password = hashedPassword;
+    user.roles = userRole;
+    const registerUser = await this.userService.create(user);
 
-    // Exclude password before returning
-    const { password: _, ...adminWithoutPassword } = createdAdmin;
-    return adminWithoutPassword;
-  }
-
-  async register(body: any) {
-    // validate
+    return registerUser;
   }
 
   // Generate JWT token
