@@ -16,7 +16,7 @@ export class UserService {
 
   async create(createUserBody: CreateUserDto): Promise<UserEntity> {
     const { email, name, password, roles } = createUserBody;
-    
+
     // Check if admin already exists
     const userExist = await this.findByEmail(email);
 
@@ -26,7 +26,7 @@ export class UserService {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const user = new UserEntity();
     user.email = email;
     user.name = name;
@@ -37,6 +37,7 @@ export class UserService {
   }
 
   async findAll(): Promise<UserEntity[]> {
+    return this.userRepository.find({});
     return this.userRepository.find({});
   }
 

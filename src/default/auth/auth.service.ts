@@ -54,11 +54,11 @@ export class AuthService {
     user: UserEntity,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const permissions = ROLE_PERMISSIONS[user.roles] || [];
-    const payload : AuthenticatedUser = {
+    const payload: AuthenticatedUser = {
       username: user.name,
       sub: user.id,
-      roles: [ user.roles ],
-      permissions: permissions
+      roles: [user.roles],
+      permissions: permissions,
     };
 
     const accessToken = this.jwtService.sign(payload, {

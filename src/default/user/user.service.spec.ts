@@ -34,7 +34,9 @@ describe('UserService', () => {
     }).compile();
 
     userService = module.get<UserService>(UserService);
-    userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    userRepository = module.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
 
     // Reset mocks before each test
     jest.clearAllMocks();
@@ -47,9 +49,19 @@ describe('UserService', () => {
   // --- Test Cases for create ---
   describe('create', () => {
     it('should create a new user with a default role', async () => {
-      const defaultRole = UserRoles.Viewer ;
-      const createDto = { name: 'newuser', password: 'password123', email: 'a@b.com', roles: defaultRole };
-      const createdUser = { id: 'new-id', name: 'newuser', password_hash: 'hashed', email: 'a@b.com' };
+      const defaultRole = UserRoles.Viewer;
+      const createDto = {
+        name: 'newuser',
+        password: 'password123',
+        email: 'a@b.com',
+        roles: defaultRole,
+      };
+      const createdUser = {
+        id: 'new-id',
+        name: 'newuser',
+        password_hash: 'hashed',
+        email: 'a@b.com',
+      };
 
       // Mock repository calls
       mockUserRepository.create.mockReturnValue(createdUser); // create() just prepares the entity
@@ -74,7 +86,10 @@ describe('UserService', () => {
   // --- Test Cases for findAll ---
   describe('findAll', () => {
     it('should return an array of users', async () => {
-      const users = [{ id: 'user-1', name: 'u1' }, { id: 'user-2', name: 'u2' }];
+      const users = [
+        { id: 'user-1', name: 'u1' },
+        { id: 'user-2', name: 'u2' },
+      ];
       mockUserRepository.find.mockResolvedValue(users);
       expect(await userService.findAll()).toEqual(users);
       expect(mockUserRepository.find).toHaveBeenCalled();
@@ -84,10 +99,16 @@ describe('UserService', () => {
   // --- Test Cases for findByUsername ---
   describe('findByUsername', () => {
     it('should return a user if found', async () => {
-      const user = { id: 'user-1', username: 'testuser', password_hash: 'hashed_password' };
+      const user = {
+        id: 'user-1',
+        username: 'testuser',
+        password_hash: 'hashed_password',
+      };
       mockUserRepository.findOne.mockResolvedValue(user);
       expect(await userService.findByUsername('testuser')).toEqual(user);
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { username: 'testuser' } });
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { username: 'testuser' },
+      });
     });
 
     it('should return null if user not found', async () => {
@@ -98,14 +119,20 @@ describe('UserService', () => {
 
   // --- Test Cases for updateUserRole ---
   describe('updateUserRole', () => {
-    const newRoleName = {roles: UserRoles.Editor};
+    const newRoleName = { roles: UserRoles.Editor };
     it('should update user role successfully', async () => {
       const userId = 'user-to-update';
-      const mockUser = { id: userId, username: 'testuser', users_roles: [{ id: 'ur-1', user: { id: userId }, role: { id: 3, name: 'viewer' } }] }; // Existing viewer role
-      
+      const mockUser = {
+        id: userId,
+        username: 'testuser',
+        users_roles: [
+          { id: 'ur-1', user: { id: userId }, role: { id: 3, name: 'viewer' } },
+        ],
+      }; // Existing viewer role
+
       // Mock repository calls
       mockUserRepository.findOne.mockResolvedValue(mockUser);
-      await userService.update(userId, newRoleName );
+      await userService.update(userId, newRoleName);
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: userId }, // Important for fetching existing roles
@@ -114,12 +141,19 @@ describe('UserService', () => {
 
     it('should throw NotFoundException if user not found', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      await expect(userService.update('non-existent', newRoleName )).rejects.toThrow(NotFoundException);
+      await expect(
+        userService.update('non-existent', newRoleName),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException if new role not found', async () => {
-      mockUserRepository.findOne.mockResolvedValue({ id: 'user-1', users_roles: [] });
-      await expect(userService.update('user-1', { roles: 'non-existent-role'})).rejects.toThrow(NotFoundException);
+      mockUserRepository.findOne.mockResolvedValue({
+        id: 'user-1',
+        users_roles: [],
+      });
+      await expect(
+        userService.update('user-1', { roles: 'non-existent-role' }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -144,15 +178,15 @@ describe('UserService', () => {
 
   // --- Test Cases for comparePassword ---
   // will fix this later, when i have some time to refactor the code
-//   describe('comparePassword', () => {
-//     it('should return true for matching passwords', async () => {
-//       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
-//       expect(await userService.comparePassword('password', 'hashed_password')).toBe(true);
-//     });
+  //   describe('comparePassword', () => {
+  //     it('should return true for matching passwords', async () => {
+  //       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+  //       expect(await userService.comparePassword('password', 'hashed_password')).toBe(true);
+  //     });
 
-//     it('should return false for non-matching passwords', async () => {
-//       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
-//       expect(await userService.comparePassword('wrong_password', 'hashed_password')).toBe(false);
-//     });
-//   });
+  //     it('should return false for non-matching passwords', async () => {
+  //       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+  //       expect(await userService.comparePassword('wrong_password', 'hashed_password')).toBe(false);
+  //     });
+  //   });
 });
