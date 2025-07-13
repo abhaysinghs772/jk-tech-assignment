@@ -38,6 +38,7 @@ export class UserService {
 
   async findAll(): Promise<UserEntity[]> {
     return this.userRepository.find({});
+    return this.userRepository.find({});
   }
 
   async findOne(id: string): Promise<UserEntity | null> {

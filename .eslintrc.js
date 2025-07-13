@@ -34,4 +34,5 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     "linebreak-style": ["error", "unix"]
   },
+  "linebreak-style": ["error", "unix"]
 };
