@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { UserRoles } from '../../auth/dto/register-user.dto';
+import { UserRoles } from '../../common/enums/role.enum';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('user')
@@ -26,7 +26,7 @@ export class UserEntity {
   @Column({ nullable: true, name: 'last_login_at', type: 'timestamp' })
   lastLoginAt: Date;
 
-  @Column({ type: 'enum', enum: UserRoles, nullable: true })
+  @Column({ type: 'enum', enum: UserRoles, default: UserRoles.Viewer, nullable: true })
   roles: UserRoles;
 
   @Column({ nullable: true, name: 'refresh_token' })
