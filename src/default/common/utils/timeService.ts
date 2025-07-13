@@ -12,12 +12,12 @@ export function getTimeGap(timeString: string): string {
     return `${hours}h`;
   } else if (absoluteTimeDifference < 7 * millisecondsPerDay) {
     const days: number = Math.floor(
-      absoluteTimeDifference / millisecondsPerDay
+      absoluteTimeDifference / millisecondsPerDay,
     );
     return `${days}d`;
   } else {
     const weeks: number = Math.floor(
-      absoluteTimeDifference / (7 * millisecondsPerDay)
+      absoluteTimeDifference / (7 * millisecondsPerDay),
     );
     return `${weeks}w`;
   }

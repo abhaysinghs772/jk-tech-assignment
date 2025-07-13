@@ -1,8 +1,18 @@
 import { Exclude } from 'class-transformer';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UserRoles } from '../../common/enums/role.enum';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  BaseEntity,
+} from 'typeorm';
+import { DocumentEntity } from '../../documents/entities/document.entity';
 
 @Entity('user')
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,8 +35,13 @@ export class UserEntity {
   @Column({ nullable: true, name: 'last_login_at', type: 'timestamp' })
   lastLoginAt: Date;
 
-  @Column({ type: 'simple-array', nullable: true })
-  roles: string[];
+  @Column({
+    type: 'enum',
+    enum: UserRoles,
+    default: UserRoles.Viewer,
+    nullable: true,
+  })
+  roles: UserRoles;
 
   @Column({ nullable: true, name: 'refresh_token' })
   refreshToken: string;
@@ -34,6 +49,15 @@ export class UserEntity {
   @Column({ nullable: true })
   otp: string;
 
+  @OneToMany(() => DocumentEntity, (doc) => doc.uploaded_by, { cascade: true })
+  documents: DocumentEntity[];
+
   @Column({ nullable: true, name: 'refresh_token_expiry', type: 'timestamp' })
   refreshTokenExpiry: Date;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt?: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  updatedAt?: Date;
 }

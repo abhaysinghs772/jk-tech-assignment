@@ -22,6 +22,7 @@ import { CloudwatchModule } from './default/logger/cloudwatch/cloudwatch.module'
 import { JourneyIdInterceptor } from './default/common/interceptors/journey-id/journey-id-add.interceptor';
 import { RemoveJourneyIdInterceptor } from './default/common/interceptors/journey-id/journey-id-remove.interceptor';
 import { IdempotencyModule } from './default/idempotency/idempotency.module';
+import { DocumentModule } from './default/documents/document.module';
 
 @Module({
   imports: [
@@ -35,10 +36,11 @@ import { IdempotencyModule } from './default/idempotency/idempotency.module';
     SwaggerModule,
     HttpModule,
     UserModule,
-    ErrorHandlingModule,
     AuthModule,
+    ErrorHandlingModule,
     CloudwatchModule,
     IdempotencyModule,
+    DocumentModule,
   ],
   providers: [
     {
