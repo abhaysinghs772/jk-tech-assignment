@@ -13,6 +13,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { UserRoles } from '../common/enums/role.enum';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ROLE_PERMISSIONS } from '../common/constants/role-permissions';
+import { AuthenticatedUser } from '../common/interfaces/authenticated-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,7 @@ export class AuthService {
     user: UserEntity,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const permissions = ROLE_PERMISSIONS[user.roles] || [];
-    const payload = {
+    const payload : AuthenticatedUser = {
       username: user.name,
       sub: user.id,
       roles: [ user.roles ],
