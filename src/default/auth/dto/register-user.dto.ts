@@ -6,10 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export enum UserRoles {
-  Admin = 'admin',
-  User = 'user',
-}
+import { UserRoles } from 'src/default/common/enums/role.enum';
 
 export class RegisterUserDto {
   @IsString()

@@ -10,8 +10,9 @@ import { AppConfigService } from 'src/default/config/config.service';
 import { UserService } from 'src/default/user/user.service';
 import { encryption } from 'src/default/common/constants/encryption.option';
 import { UserEntity } from '../user/entities/user.entity';
-import { UserRoles } from './dto/register-user.dto';
+import { UserRoles } from '../common/enums/role.enum';
 import { LoginUserDto } from './dto/login-user.dto';
+import { ROLE_PERMISSIONS } from '../common/constants/role-permissions';
 
 @Injectable()
 export class AuthService {
@@ -49,12 +50,14 @@ export class AuthService {
   }
 
   async generateTokens(
-    user: any,
+    user: UserEntity,
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    const permissions = ROLE_PERMISSIONS[user.roles] || [];
     const payload = {
-      username: user.username,
+      username: user.name,
       sub: user.id,
-      roles: user.roles,
+      roles: [ user.roles ],
+      permissions: permissions
     };
 
     const accessToken = this.jwtService.sign(payload, {
