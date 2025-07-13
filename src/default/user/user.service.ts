@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
 
   async create(createUserBody: CreateUserDto): Promise<UserEntity> {
     const { email, name, password, roles } = createUserBody;
-    
+
     // Check if admin already exists
     const userExist = await this.findByEmail(email);
 
@@ -25,7 +26,7 @@ export class UserService {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const user = new UserEntity();
     user.email = email;
     user.name = name;
@@ -43,7 +44,7 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
-  async update(id: string, user: Partial<UserEntity>): Promise<UserEntity> {
+  async update(id: string, user: UpdateUserDto): Promise<UserEntity> {
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }
