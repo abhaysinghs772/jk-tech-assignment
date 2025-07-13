@@ -25,7 +25,7 @@
     "mig:create": "npx ts-node node_modules/.bin/typeorm migration:create src/migrations/test-timestamps-OtpDetailsEntity",
     "mig:revert": "npx ts-node node_modules/.bin/typeorm migration:revert -d ./src/data-source.ts",
 
-    "mig:gen:win": "npx ts-node ./node_modules/typeorm/cli.js migration:generate src/default/migrations/inital-migration -d ./src/data-source.ts",
+    "mig:gen:win": "npx ts-node ./node_modules/typeorm/cli.js migration:generate src/default/migrations/alter-user-table-add-role-columns -d ./src/data-source.ts",
     "mig:run:win": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
     "mig:create:win": "npx ts-node ./node_modules/typeorm/cli.js migration:create src/default/migrations/inital-migration",
     "mig:revert:win": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
