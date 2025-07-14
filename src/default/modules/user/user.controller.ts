@@ -14,9 +14,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/default/auth/guards/jwt-auth.guard';
 import { NoCache } from 'src/default/cache/cache.decorator';
-import { IdempotencyInterceptor } from '../common/interceptors/idempotency.interceptor';
-import { PermissionGuard } from '../auth/guards/permission.guard';
-import { Permissions } from '../common/decorators/permissions.decorator';
+import { IdempotencyInterceptor } from '../../common/interceptors/idempotency.interceptor';
+import { PermissionGuard } from '../../auth/guards/permission.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, PermissionGuard)

@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { OtpStrategy } from './strategies/otp.strategy';
-import { UserModule } from 'src/default/user/user.module';
+import { UserModule } from 'src/default/modules/user/user.module';
 import { ApiKeySecretStrategy } from './strategies/secret.strategy';
 import { AppConfigService } from 'src/default/config/config.service';
 import { ConfigModule } from 'src/default/config/config.module';

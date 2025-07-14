@@ -6,7 +6,6 @@ import { AppController } from './app.controller';
 import { AppCacheModule } from './default/cache/cache.module';
 import { SwaggerModule } from './default/swagger/swagger.module';
 import { HttpModule } from '@nestjs/axios';
-import { UserModule } from './default/user/user.module';
 import { ErrorHandlingModule } from './default/error/error.module';
 import { NotFoundMiddleware } from './default/common/middleware/not-found.middleware';
 import { APP_PIPE } from '@nestjs/core';
@@ -22,7 +21,8 @@ import { CloudwatchModule } from './default/logger/cloudwatch/cloudwatch.module'
 import { JourneyIdInterceptor } from './default/common/interceptors/journey-id/journey-id-add.interceptor';
 import { RemoveJourneyIdInterceptor } from './default/common/interceptors/journey-id/journey-id-remove.interceptor';
 import { IdempotencyModule } from './default/idempotency/idempotency.module';
-import { DocumentModule } from './default/documents/document.module';
+import { UserModule } from './default/modules/user/user.module';
+import { DocumentModule } from './default/modules/documents/document.module';
 
 @Module({
   imports: [

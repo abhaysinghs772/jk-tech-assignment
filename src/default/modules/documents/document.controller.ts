@@ -17,15 +17,15 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionGuard } from '../auth/guards/permission.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../auth/guards/permission.guard';
 import { DocumentService } from './document.service';
 
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { Permissions } from '../common/decorators/permissions.decorator';
-import { AuthenticatedUser } from '../common/interfaces/authenticated-user.interface';
-import { Permission } from '../common/enums/permission.enum';
+import { Permissions } from '../../common/decorators/permissions.decorator';
+import { AuthenticatedUser } from '../../common/interfaces/authenticated-user.interface';
+import { Permission } from '../../common/enums/permission.enum';
 // import { FileSizeValidationPipe } from "./pipes/fileupload.pipe"; // can use this also
 
 // Define storage for multer (for file uploads)
