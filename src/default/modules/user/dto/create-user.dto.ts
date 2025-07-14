@@ -4,6 +4,7 @@ import {
   IsString,
   IsEnum,
   MinLength,
+  IsOptional,
 } from 'class-validator';
 import { UserRoles } from 'src/default/common/enums/role.enum';
 
@@ -25,4 +26,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(UserRoles)
   roles: UserRoles;
+
+  @IsOptional()
+  refreshToken: string;
+
+  @IsOptional()
+  refreshTokenExpiry: Date;
 }

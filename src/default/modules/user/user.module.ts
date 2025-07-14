@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { IdempotencyModule } from '../idempotency/idempotency.module';
+import { IdempotencyModule } from '../../idempotency/idempotency.module';
 
 @Module({
   imports: [

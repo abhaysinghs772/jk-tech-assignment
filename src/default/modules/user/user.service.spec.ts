@@ -5,7 +5,7 @@ import { UserEntity } from './entities/user.entity'; // Your TypeORM UserEntity 
 import * as bcrypt from 'bcrypt';
 import { NotFoundException } from '@nestjs/common';
 import { QueryFailedError, Repository } from 'typeorm'; // Import Repository
-import { UserRoles } from '../common/enums/role.enum';
+import { UserRoles } from '../../common/enums/role.enum';
 
 // --- Mocks for TypeORM Repositories ---
 const mockUserRepository = {

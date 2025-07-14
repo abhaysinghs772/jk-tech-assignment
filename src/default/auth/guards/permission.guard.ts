@@ -33,11 +33,19 @@ export class PermissionGuard implements CanActivate {
       );
     }
 
+    const somePermissions = reQuiredPermissions.some((permission) =>
+      user.permissions.includes(permission),
+    );
+
+    if(somePermissions) {
+      return true;
+    }
+
     // check if the user has all required permisisons or not
     const hasAllRequiredPermissions = reQuiredPermissions.every((permission) =>
       user.permissions.includes(permission),
     );
-
+    
     if (!hasAllRequiredPermissions) {
       throw new ForbiddenException(
         'You do not have sufficient permissions to access this resource.',

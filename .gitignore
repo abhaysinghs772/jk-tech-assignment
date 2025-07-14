@@ -59,3 +59,5 @@ docker-compose.yaml
 mysql_data
 postgres_data
 dist
+
+uploads/
