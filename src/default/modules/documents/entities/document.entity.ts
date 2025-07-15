@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import { IngestionProcessEntity } from '../../ingestion/entities/ingestion.entity';
 
 @Entity('documents')
 export class DocumentEntity extends BaseEntity {
@@ -22,6 +24,9 @@ export class DocumentEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.documents, { nullable: true })
   uploaded_by: UserEntity;
+
+  @OneToMany(() => IngestionProcessEntity, (ingestion) => ingestion.document)
+  ingestionProcesses: IngestionProcessEntity[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt?: Date;

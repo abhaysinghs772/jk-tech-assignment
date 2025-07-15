@@ -10,6 +10,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { DocumentEntity } from '../../documents/entities/document.entity';
+import { IngestionProcessEntity } from '../../ingestion/entities/ingestion.entity';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -51,6 +52,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => DocumentEntity, (doc) => doc.uploaded_by, { cascade: true })
   documents: DocumentEntity[];
+
+  @OneToMany(() => IngestionProcessEntity, (ingestion) => ingestion.triggeredBy)
+  triggeredIngestions: IngestionProcessEntity[];
 
   @Column({ nullable: true, name: 'refresh_token_expiry', type: 'timestamp' })
   refreshTokenExpiry: Date;
