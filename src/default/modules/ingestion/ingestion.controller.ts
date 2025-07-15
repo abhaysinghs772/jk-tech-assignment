@@ -5,6 +5,7 @@ import {
   Param,
   UseGuards,
   Req,
+  Body,
   HttpCode,
   HttpStatus,
   NotFoundException,
@@ -17,6 +18,7 @@ import { AuthenticatedUser } from '../../common/interfaces/authenticated-user.in
 import { IngestionService } from './ingestion.service'; // Your ingestion service
 import { HttpService } from '@nestjs/axios'; // For microservice communication
 import { firstValueFrom } from 'rxjs';
+import { Permission } from 'src/default/common/enums/permission.enum';
 
 @Controller('ingestion')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -43,7 +45,7 @@ export class IngestionController {
     // 2. Record ingestion request in your database
     const ingestionProcess = await this.ingestionService.createIngestionProcess(
       documentId,
-      req.user.id,
+      req.user.sub,
     );
 
     // 3. Trigger Python backend (microservice communication)
@@ -53,7 +55,7 @@ export class IngestionController {
       await firstValueFrom(
         this.httpService.post(`${pythonBackendUrl}/ingest`, {
           documentId: document.id,
-          filePath: document.filePath,
+          filePath: document.path,
           ingestionProcessId: ingestionProcess.id, // Pass NestJS process ID for status updates
         }),
       );
@@ -72,10 +74,10 @@ export class IngestionController {
   @Permissions('view:ingestion_status')
   findAllIngestionProcesses(@Req() req: { user: AuthenticatedUser }) {
     // Admins can see all, Editors might only see their own triggered processes
-    if (req.user.permissions.includes('manage:ingestion_processes')) { // Admin
+    if (req.user.permissions.includes(Permission.ManageIngestionProcesses)) { 
       return this.ingestionService.findAllIngestionProcesses();
     } else { // Editors/Viewers with 'view:ingestion_status' might only see their own
-      return this.ingestionService.findUserIngestionProcesses(req.user.id);
+      return this.ingestionService.findUserIngestionProcesses(req.user.sub);
     }
   }
 
@@ -88,7 +90,7 @@ export class IngestionController {
     }
 
     // Ensure users can only view processes they are authorized for
-    if (!req.user.permissions.includes('manage:ingestion_processes') && process.triggeredBy !== req.user.id) {
+    if (!req.user.permissions.includes(Permission.ManageIngestionProcesses) && process.triggeredBy !== req.user.id) {
       throw new ForbiddenException('You are not authorized to view this ingestion process status.');
     }
 
