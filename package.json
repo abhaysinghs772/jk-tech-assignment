@@ -23,7 +23,7 @@
     "mig:run": "npx ts-node node_modules/.bin/typeorm migration:run -d ./src/data-source.ts",
     "mig:create": "npx ts-node node_modules/.bin/typeorm migration:create src/migrations/test-timestamps-OtpDetailsEntity",
     "mig:revert": "npx ts-node node_modules/.bin/typeorm migration:revert -d ./src/data-source.ts",
-    "mig:gen:win": "npx ts-node ./node_modules/typeorm/cli.js migration:generate src/default/migrations/create-documents-table -d ./src/data-source.ts",
+    "mig:gen:win": "npx ts-node ./node_modules/typeorm/cli.js migration:generate src/default/migrations/create-ingestion_processes-table -d ./src/data-source.ts",
     "mig:run:win": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
     "mig:create:win": "npx ts-node ./node_modules/typeorm/cli.js migration:create src/default/migrations/inital-migration",
     "mig:revert:win": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
