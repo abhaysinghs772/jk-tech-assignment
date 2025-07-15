@@ -6,8 +6,6 @@ import {
   Param,
   Patch,
   Delete,
-  NotFoundException,
-  ParseUUIDPipe,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,42 +14,36 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/default/auth/guards/jwt-auth.guard';
 import { NoCache } from 'src/default/cache/cache.decorator';
-import { IdempotencyInterceptor } from '../common/interceptors/idempotency.interceptor';
+import { IdempotencyInterceptor } from '../../common/interceptors/idempotency.interceptor';
+import { PermissionGuard } from '../../auth/guards/permission.guard';
+import { Permissions } from '../../common/decorators/permissions.decorator';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get()
+  @Permissions('manage:users')
+  async findAll(): Promise<any[]> {
+    return this.userService.findAll();
+  }
 
   @NoCache()
   @UseInterceptors(IdempotencyInterceptor)
   @Post()
-  async create(@Body() user: Partial<CreateUserDto>): Promise<UpdateUserDto> {
+  @Permissions('manage:users')
+  async create(@Body() user: CreateUserDto): Promise<UpdateUserDto> {
     return this.userService.create(user);
-  }
-
-  @Get()
-  async findAll(): Promise<UpdateUserDto[]> {
-    return await this.userService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<UpdateUserDto> {
-    const user = await this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    return user;
   }
 
   @NoCache()
   @UseInterceptors(IdempotencyInterceptor)
   @Patch(':id')
-  async update(
+  @Permissions('manage:users')
+  async updateUserRole(
     @Param('id') id: string,
-    @Body() userDto: Partial<UpdateUserDto>,
+    @Body() userDto: UpdateUserDto,
   ): Promise<UpdateUserDto> {
     return this.userService.update(id, userDto);
   }
@@ -59,7 +51,8 @@ export class UserController {
   @NoCache()
   @UseInterceptors(IdempotencyInterceptor)
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
+  @Permissions('manage:users')
+  async deleteUser(@Param('id') id: string): Promise<void> {
     return this.userService.delete(id);
   }
 }

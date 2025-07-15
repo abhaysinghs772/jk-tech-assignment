@@ -13,11 +13,11 @@ export const validationSchema = Joi.object({
   API_SECRET: Joi.string().required(),
 
   // MySQL Config
-  MYSQL_HOST: Joi.string().required(),
-  MYSQL_PORT: Joi.number().default(3306),
-  MYSQL_USERNAME: Joi.string().required(),
-  MYSQL_PASSWORD: Joi.string().required(),
-  MYSQL_DATABASE: Joi.string().required(),
+  // MYSQL_HOST: Joi.string().required(),
+  // MYSQL_PORT: Joi.number().default(3306),
+  // MYSQL_USERNAME: Joi.string().required(),
+  // MYSQL_PASSWORD: Joi.string().required(),
+  // MYSQL_DATABASE: Joi.string().required(),
 
   // MongoDB Config
   // MONGO_HOST: Joi.string().required(),

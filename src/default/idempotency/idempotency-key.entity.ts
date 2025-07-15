@@ -11,7 +11,7 @@ export class IdempotencyKeyEntity {
   @Column({ default: 'pending' })
   status: string;
 
-  @Column({ type: 'json', nullable: true }) // Use 'json' instead of 'jsonb'
+  @Column({ type: 'jsonb', nullable: true })
   response: any;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

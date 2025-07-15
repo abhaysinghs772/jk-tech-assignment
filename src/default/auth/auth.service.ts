@@ -7,9 +7,13 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AppConfigService } from 'src/default/config/config.service';
-import { UserService } from 'src/default/user/user.service';
+import { UserService } from 'src/default/modules/user/user.service';
 import { encryption } from 'src/default/common/constants/encryption.option';
-import { UserEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../modules/user/entities/user.entity';
+import { UserRoles } from '../common/enums/role.enum';
+import { LoginUserDto } from './dto/login-user.dto';
+import { ROLE_PERMISSIONS } from '../common/constants/role-permissions';
+import { AuthenticatedUser } from '../common/interfaces/authenticated-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -47,12 +51,14 @@ export class AuthService {
   }
 
   async generateTokens(
-    user: any,
+    user: UserEntity,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const payload = {
-      username: user.username,
+    const permissions = ROLE_PERMISSIONS[user.roles] || [];
+    const payload: AuthenticatedUser = {
+      username: user.name,
       sub: user.id,
-      roles: user.roles,
+      roles: [user.roles],
+      permissions: permissions,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -78,6 +84,46 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async register(registerUserBody: {
+    name: string;
+    email: string;
+    password: string;
+    userRole: UserRoles;
+  }) {
+    const { name, email, password, userRole } = registerUserBody;
+
+    // Check if admin already exists
+    const existingAdmin = await this.userService.findByEmail(email);
+
+    if (existingAdmin) {
+      throw new ConflictException('user with this email already exists.');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save admin
+    const user = new UserEntity();
+    user.name = name;
+    user.email = email;
+    user.password = hashedPassword;
+    user.roles = userRole;
+    const registerUser = await this.userService.create(user);
+
+    return registerUser;
+  }
+
+  // Generate JWT token and refresh token
+  async login(loginUserBody: LoginUserDto) {
+    const { email, password } = loginUserBody;
+
+    // validate user
+    const user = await this.validateUser(email, password);
+
+    // return access_token and refresh_token
+    return this.generateTokens(user);
   }
 
   async refreshTokens(
@@ -125,40 +171,5 @@ export class AuthService {
     } catch (err) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-  }
-
-  async registerAdmin(body: any) {
-    const { name, email, password } = body;
-
-    // Check if admin already exists
-    const existingAdmin = await this.userService.findByEmail(email);
-
-    if (existingAdmin) {
-      throw new ConflictException('An admin with this email already exists.');
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and save admin
-    const admin = new UserEntity();
-    admin.name = name;
-    admin.email = email;
-    admin.password = hashedPassword;
-    admin.roles = ['admin'];
-    const createdAdmin = await this.userService.create(admin);
-
-    // Exclude password before returning
-    const { password: _, ...adminWithoutPassword } = createdAdmin;
-    return adminWithoutPassword;
-  }
-
-  async register(body: any) {
-    // validate
-  }
-
-  // Generate JWT token
-  async login(user: any) {
-    return this.generateTokens(user);
   }
 }
